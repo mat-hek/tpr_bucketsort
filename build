@@ -1,0 +1,2 @@
+mkdir -p bin
+gcc-7 -Wall -Wextra -o bin/bs -fopenmp bs.c
