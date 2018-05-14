@@ -7,7 +7,6 @@
 
 #define BUCKET_NUM 10
 #define MAX_NUM 10000
-#define BUCKET_RANGE (MAX_NUM/BUCKET_NUM + 1)
 
 
 void print_array(int arr[], int n)
@@ -24,13 +23,15 @@ int cmp(const void *a, const void *b){
 
 int main(int argc, char** argv) {
 
-  if(argc != 2) {
-    printf("usage: bs <array_size>");
+  if(argc != 3) {
+    printf("usage: bs <array_size> <bucket_num>");
     return 1;
   }
 
   int thread_num = omp_get_max_threads();
   int array_size = atoi(argv[1])/thread_num*thread_num;
+  int bucket_num = atoi(argv[2]);
+  int bucket_range = MAX_NUM/bucket_num + 1;
 
   int* A = malloc(array_size * sizeof(int));
 
@@ -44,9 +45,9 @@ int main(int argc, char** argv) {
 
   // print_array(A, array_size);
 
-  int* buckets[BUCKET_NUM];
-  int buckets_ptrs[BUCKET_NUM];
-  for(int i = 0; i < BUCKET_NUM; i++) {
+  int** buckets = malloc(sizeof(int*) * bucket_num);
+  int* buckets_ptrs = malloc(sizeof(int) * bucket_num);
+  for(int i = 0; i < bucket_num; i++) {
     buckets[i] = malloc(array_size * sizeof(int));
     buckets_ptrs[i] = 0;
   }
@@ -54,14 +55,14 @@ int main(int argc, char** argv) {
   #pragma omp parallel for shared(buckets_ptrs)
   for(int i = 0; i < array_size; i++) {
     long long int j;
-    for(j = 0; A[i] >= (j+1)*BUCKET_RANGE; j++);
+    for(j = 0; A[i] >= (j+1)*bucket_range; j++);
     buckets[j][buckets_ptrs[j]] = A[i];
     buckets_ptrs[j]++;
   }
 
-  int buckets_positions[BUCKET_NUM];
+  int* buckets_positions = malloc(sizeof(int) * bucket_num);;
   buckets_positions[0] = 0;
-  for(int i = 1; i < BUCKET_NUM; i++) {
+  for(int i = 1; i < bucket_num; i++) {
     buckets_positions[i] = buckets_positions[i-1] + buckets_ptrs[i-1];
   }
 
