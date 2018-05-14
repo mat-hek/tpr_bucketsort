@@ -192,12 +192,12 @@ int main(int argc, char *argv[]){
     bucket_sort(arr, arr_len, buckets_num);
 //     print_array(arr, arr_len);
 
-    for(int i = 0; i < arr_len - 1; ++i)
-        if(arr[i] > arr[i + 1]){
-            printf("\nFAILED!!! %d %d\n", arr[i], arr[i+1]);
-            free(arr);
-            return -1;
-        }
+//    for(int i = 0; i < arr_len - 1; ++i)
+//        if(arr[i] > arr[i + 1]){
+//            printf("\nFAILED!!! %d %d\n", arr[i], arr[i+1]);
+//            free(arr);
+//            return -1;
+//        }
 
     free(arr);
     return 0;
