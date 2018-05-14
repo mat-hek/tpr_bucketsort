@@ -52,7 +52,7 @@ int main(int argc, char** argv) {
     buckets_ptrs[i] = 0;
   }
 
-  #pragma omp parallel for
+  #pragma omp parallel for schedule(guided)
   for(long long i = 0; i < array_size; i++) {
     long long int j;
     for(j = 0; A[i] >= (j+1)*bucket_range; j++);
@@ -68,7 +68,7 @@ int main(int argc, char** argv) {
     buckets_positions[i] = buckets_positions[i-1] + buckets_ptrs[i-1];
   }
 
-  #pragma omp parallel for
+  #pragma omp parallel for schedule(guided)
   for(int i = 0; i < BUCKET_NUM; i++) {
     qsort(buckets[i], buckets_ptrs[i], sizeof(int), cmp);
     memcpy(A+buckets_positions[i], buckets[i], buckets_ptrs[i]*sizeof(int));
@@ -76,12 +76,12 @@ int main(int argc, char** argv) {
 
   // print_array(A, array_size);
 
-  for(long long i = 1; i < array_size; ++i)
-    if(A[i-1] > A[i]){
-      printf("\nFAILED!!! %d %d\n", A[i-1], A[i]);
-      free(A);
-      return -1;
-    }
+  // for(long long i = 1; i < array_size; ++i)
+  //   if(A[i-1] > A[i]){
+  //     printf("\nFAILED!!! %d %d\n", A[i-1], A[i]);
+  //     free(A);
+  //     return -1;
+  //   }
 
   free(A);
 
