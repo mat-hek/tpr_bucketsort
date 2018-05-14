@@ -18,13 +18,13 @@ void print_array(int arr[], int n)
 }
 
 int cmp(const void *a, const void *b){
-    return *(int*)b - *(int*)a;
+  return (*(int*)a < *(int*)b) ? -1 : (*(int*)a > *(int*)b);
 }
 
 int main(int argc, char** argv) {
 
   if(argc != 3) {
-    printf("usage: bs <array_size> <bucket_num>");
+    printf("usage: bs <array_size> <bucket_num>\n");
     return 1;
   }
 
@@ -52,12 +52,14 @@ int main(int argc, char** argv) {
     buckets_ptrs[i] = 0;
   }
 
-  #pragma omp parallel for shared(buckets_ptrs)
+  #pragma omp parallel for
   for(int i = 0; i < array_size; i++) {
     long long int j;
     for(j = 0; A[i] >= (j+1)*bucket_range; j++);
-    buckets[j][buckets_ptrs[j]] = A[i];
-    buckets_ptrs[j]++;
+    int idx;
+    #pragma omp atomic capture
+    idx = buckets_ptrs[j]++;
+    buckets[j][idx] = A[i];
   }
 
   int* buckets_positions = malloc(sizeof(int) * bucket_num);;
@@ -73,6 +75,13 @@ int main(int argc, char** argv) {
   }
 
   // print_array(A, array_size);
+
+  for(int i = 1; i < array_size; ++i)
+    if(A[i-1] > A[i]){
+      printf("\nFAILED!!! %d %d\n", A[i-1], A[i]);
+      free(A);
+      return -1;
+    }
 
   free(A);
 
