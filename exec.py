@@ -19,7 +19,7 @@ def exec_mc(scale):
     for n in cores_cnts:
       ss = s*n if scale else s
       t = timeit(
-        lambda: subprocess.call(f"OMP_NUM_THREADS={str(n)}; ./bin/bs {str(ss)}", shell=True),
+        lambda: subprocess.call(f"OMP_NUM_THREADS={str(n)} ./bin/bs {str(ss)}", shell=True),
         number=1
         )
       res[label].append(t)
