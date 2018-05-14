@@ -29,7 +29,7 @@ int main(int argc, char** argv) {
   }
 
   int thread_num = omp_get_max_threads();
-  int array_size = atoi(argv[1])/thread_num*thread_num;
+  long long array_size = atoll(argv[1])/thread_num*thread_num;
   int bucket_num = atoi(argv[2]);
   int bucket_range = MAX_NUM/bucket_num + 1;
 
@@ -38,7 +38,7 @@ int main(int argc, char** argv) {
   #pragma omp parallel for
   for(int i = 0; i < thread_num; i++) {
     unsigned int seed = time(NULL) + i;
-    for(int j = 0; j < array_size/thread_num; j++) {
+    for(long long j = 0; j < array_size/thread_num; j++) {
       A[j+i*array_size/thread_num] = rand_r(&seed)%MAX_NUM;
     }
   }
@@ -46,23 +46,23 @@ int main(int argc, char** argv) {
   // print_array(A, array_size);
 
   int** buckets = malloc(sizeof(int*) * bucket_num);
-  int* buckets_ptrs = malloc(sizeof(int) * bucket_num);
+  int* buckets_ptrs = malloc(sizeof(long long) * bucket_num);
   for(int i = 0; i < bucket_num; i++) {
     buckets[i] = malloc(array_size * sizeof(int));
     buckets_ptrs[i] = 0;
   }
 
   #pragma omp parallel for
-  for(int i = 0; i < array_size; i++) {
+  for(long long i = 0; i < array_size; i++) {
     long long int j;
     for(j = 0; A[i] >= (j+1)*bucket_range; j++);
-    int idx;
+    long long idx;
     #pragma omp atomic capture
     idx = buckets_ptrs[j]++;
     buckets[j][idx] = A[i];
   }
 
-  int* buckets_positions = malloc(sizeof(int) * bucket_num);;
+  int* buckets_positions = malloc(sizeof(long long) * bucket_num);;
   buckets_positions[0] = 0;
   for(int i = 1; i < bucket_num; i++) {
     buckets_positions[i] = buckets_positions[i-1] + buckets_ptrs[i-1];
@@ -76,7 +76,7 @@ int main(int argc, char** argv) {
 
   // print_array(A, array_size);
 
-  for(int i = 1; i < array_size; ++i)
+  for(long long i = 1; i < array_size; ++i)
     if(A[i-1] > A[i]){
       printf("\nFAILED!!! %d %d\n", A[i-1], A[i]);
       free(A);
