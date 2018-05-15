@@ -5,7 +5,6 @@
 #include <limits.h>
 #include <string.h>
 
-#define BUCKET_NUM 10
 #define MAX_NUM 10000
 
 
@@ -69,7 +68,7 @@ int main(int argc, char** argv) {
   }
 
   #pragma omp parallel for schedule(guided)
-  for(int i = 0; i < BUCKET_NUM; i++) {
+  for(int i = 0; i < bucket_num; i++) {
     qsort(buckets[i], buckets_ptrs[i], sizeof(int), cmp);
     memcpy(A+buckets_positions[i], buckets[i], buckets_ptrs[i]*sizeof(int));
   }
