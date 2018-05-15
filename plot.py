@@ -14,7 +14,7 @@ data = {}
 
 for ver in versions.keys():
     for bs in buckets_sizes:
-        for k, v in json.load(open(f"res_{ver}_{bs}.json")).items():
+        for k, v in json.load(open(f"results/res_{ver}_{bs}.json")).items():
             if k not in data:
                 data[k] = {}
             data[k][(ver, bs)] = v
