@@ -3,7 +3,7 @@
 
 ### <center>Bartosz Walkowicz, Mateusz Front<center>
 
-## Zadanie:
+## Zadanie
 
 Zbadanie wpływu zwiększania liczby dostępnych procesorów na program współbieżny sortujący tablicę liczb za pomocą sortowania kubełkowego.
 Program został napisany z wykorzystaniem technologii OpenMP i dwóch wersjach.
@@ -14,9 +14,8 @@ W wariancie pierwszym zwiększano rozmiar tablicy proporcjonalnie do ilości dos
 
 W obu wariantah programy uruchamiano dla pierwotnych rozmiarów tablic: 4e7, 8e7, oraz 1e8. Natomiast liczbę wątków zwiększano od 1 do 8.
 
-## Architektura:
-```
-os              : linux
+## Architektura
+<p style="white-space:pre-wrap;font-family:monospace;background-color:#f0f1f1;color:black;padding:10px">os              : linux
 platform        : ubuntu-16.04
 kernel          : 4.13.0-41-generic
 cores           : 4
@@ -44,9 +43,9 @@ bogomips        : 5184.00
 clflush size    : 64
 cache_alignment : 64
 address sizes   : 39 bits physical, 48 bits virtual
-```
+</p>
 
-## Wykresy:
+## Wykresy
 ![Times for array size: 4e7 non-scaled](plots/Times_for_array_size:_4e7_non-scaled.png)
 ![Speedup for array size: 4e7 non-scaled](plots/Speedup_for_array_size:_4e7_non-scaled.png)
 ![Efficency for array size: 4e7 non-scaled](plots/Efficency_for_array_size:_4e7_non-scaled.png)
@@ -72,9 +71,9 @@ address sizes   : 39 bits physical, 48 bits virtual
 ![Efficency for array size: 1e8 scaled](plots/Efficency_for_array_size:_1e8_scaled.png)
 ![Serial fraction for array size: 1e8 scaled](plots/Serial_fraction_for_array_size:_1e8_scaled.png)
 
-## Wnioski:
+## Wnioski
 - Wersja trzecia bucket sorta prawie zawsze działa szybciej od wersji drugiej, co jest spowodowane brakiem konieczności synchronizacji dostępu do kubełków.
 - Czasy dosyć istotnie zależą od ilości kubełków:
-  - Większa ilość kubełków poprawia wydajność samego algorytmu bucket sort, ale zbyt duża ilość powoduje opóźnienia, które mogą być spowodowane częstszym przeładowywaniem cache.
+  - Większa ilość kubełków (w granicach rozmiaru problemu) poprawia wydajność samego algorytmu bucket sort, ale zbyt duża ilość powoduje opóźnienia, które mogą być spowodowane częstszym przeładowywaniem cache.
   - W wersji drugiej mała ilość kubełków powoduje dodatkowe opóźnienia związane ze zwiększeniem ilości jednoczesnych dostępów do kubełka.
-- Brak wzrostu przyspieszenia przy zwiększeniu liczby wątków z 4 do 5 może się wiązać z architekturą systemu (8 wątków, ale tylko 4 fizyczne core'y)
+- Mały wzrost przyspieszenia przy zwiększeniu liczby wątków z 4 do 5 może się wiązać z architekturą systemu (8 wątków, ale tylko 4 fizyczne core'y)
